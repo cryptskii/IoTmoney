@@ -189,39 +189,39 @@ Accumulators provide the following benefits:
 
 Together with the hash tree structure, accumulators enable succinct state commitments that are efficiently verifiable and aggregatable across shards.
 
+You're right, that level of implementation detail is unnecessary in the high-level specifications. Here is an updated version:
+
 ## Emergent Consensus Mechanism
 
-The sharded blockchain achieves decentralized global consensus through local shard interactions using an emergent Byzantine Fault Tolerant (BFT) approach. 
+The sharded blockchain achieves decentralized global consensus through local shard interactions using an emergent Byzantine Fault Tolerant (BFT) approach.
 
-### Intra-Shard Consensus
+### Intra-Shard Consensus 
 
 Each shard si runs its own internal BFT consensus protocol Πi to agree on a local view Vi reflecting confirmed blocks, transactions, and state transitions within that shard.
 
-Any asynchronous BFT protocol like HotStuff, Tendermint, or SBFT can be used to derive Vi. The set of validators in Πi is a subset of nodes assigned to si. 
-
-### View Propagation 
+### View Propagation
 
 Shards gossip their local views to neighboring shards epidemically. 
 
 When shard sj receives view Vi from neighbor si, it incorporates Vi into its own view Vj to derive an updated view V'j.
 
-V'j = AGGREGATE(Vj, Vi)
+V'j = AGGREGATE(Vj, Vi) 
 
 That is, sj recursively aggregates its neighbors' views into its local view to incorporate wider system information.
 
-### Emergent Global Consensus 
+### Emergent Global Consensus
 
-By composing views bottom-up from the shard level towards the global level, local agreements eventually compose into a system-wide global consensus view VG reflecting finality across all shards. 
+By composing views bottom-up from the shard level towards the global level, local agreements eventually compose into a system-wide global consensus view VG reflecting finality across all shards.
 
-This emergent consensus arises organically from localized shard interactions without any centralized coordination. The recursive topology facilitates hierarchical view aggregation leading to VG. 
+This emergent consensus arises organically from localized shard interactions without any centralized coordination. The recursive topology facilitates hierarchical view aggregation leading to VG.
 
-### Analysis
+### Analysis 
 
 Rigorous proofs demonstrate that under reasonable synchrony assumptions, the emergent multi-level epidemic consensus provides:
 
 - **Agreement** - All honest shards commit to the same VG
-- **Validity** - VG reflects only valid state transitions 
-- **Termination** - VG irrevocably commits transactions
+- **Validity** - VG reflects only valid state transitions
+- **Termination** - VG irrevocably commits transactions 
 - **Decentralization** - No centralized entities or bottlenecks
 
 By combining shard-specific BFT with recursive view aggregation, global consensus emerges in a decentralized scalable manner.
