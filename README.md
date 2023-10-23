@@ -52,3 +52,6 @@ Some areas that could be improved:
 - Alternative data structures
 - Visualization tools
 - Testing and benchmarks
+
+Telegram = @Cryptskii
+Twitter = @cryptskii
