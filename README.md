@@ -53,5 +53,5 @@ Some areas that could be improved:
 - Visualization tools
 - Testing and benchmarks
 
-Telegram = @Cryptskii
-Twitter = @cryptskii
+- Telegram = @Cryptskii
+- Twitter = @cryptskii
