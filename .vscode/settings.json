@@ -5,7 +5,7 @@
     "rust-analyzer.trace.extension": true,
     "[rust]": {
         "editor.formatOnSave": true,
-        "editor.defaultFormatter": "matklad.rust-analyzer"
+        "editor.defaultFormatter": "rust-lang.rust-analyzer"
     },
     "files.autoSave": "onFocusChange"
 }
