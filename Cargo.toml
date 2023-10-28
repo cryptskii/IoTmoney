@@ -13,7 +13,7 @@ rust-ipfs = "0.6.0"
 veriform = "0.2.0"
 lru = "0.12.0"
 reed-solomon = "0.2.1"
-
+blake3 = "1.5.0"
 # Execution Layer
 wasm-pack = "0.12.1"
 wasmer = "4.2.3"
@@ -25,7 +25,7 @@ crossbeam = "0.8.2"
 vsss-rs = "3.3.1"
 blst = "0.3.0"
 patricia_tree = "0.6.3"
-
+dashmap = "5.5.3"
 # Scaling Techniques
 ring = "0.17.5"
 petgraph = "0.6.4"
@@ -35,9 +35,10 @@ petgraph = "0.6.4"
 tokio-rustls = "0.24.1"
 # Client Types
 bellman = "0.14.0"
-
+hashbrown = "0.14.2"
 
 # General dependencies
 rand = "0.8.4"
 serde_json = "1.0.68"
 serde_derive = "1.0.126"
+serde_cbor = "0.11.1"
