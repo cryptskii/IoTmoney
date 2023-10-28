@@ -1,11 +1,8 @@
-{
-    "rust-analyzer.linkedProjects": [
-        "./Cargo.toml"
-    ],
-    "rust-analyzer.trace.extension": true,
-    "[rust]": {
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "rust-lang.rust-analyzer"
-    },
-    "files.autoSave": "onFocusChange"
-}
+
+
+"rust-analyzer.trace.extension": true,
+"[rust]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+},
+"files.autoSave": "onFocusChange"

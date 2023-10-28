@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 # Networking Layer
 libp2p = "0.52.4"
-noise = "0.8.2"
+libp2p-noise = "0.43.2"
 libp2p-swarm = "0.43.7"
 libp2p-relay = "0.16.2"
 rust-ipfs = "0.6.0"
@@ -32,7 +32,7 @@ petgraph = "0.6.4"
 
 # Optimization
 # (No additional dependencies specified)
-
+tokio-rustls = "0.24.1"
 # Client Types
 bellman = "0.14.0"
 
