@@ -39,5 +39,5 @@ bellman = "0.14.0"
 
 
 # General dependencies
-rand = "0.80.8.vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html5erde = "1.0"
+rand = "0.8.4"1.0"
 serde = "1.0.19"
