@@ -1,22 +1,11 @@
 {
     "version": "0.2.0",
     "configurations": [
-        
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'my_project'",
-            "cargo": {
-                "args": [
-                    "build",
-                    "--bin=my_project",
-                    "--package=my_project"
-                ],
-                "filter": {
-                    "name": "my_project",
-                    "kind": "bin"
-                }
-            },
+            "name": "Debug executable 'IoT.money'",
+            "program": "${workspaceFolder}/target/debug/IoT.money",
             "args": [],
             "cwd": "${workspaceFolder}"
         }
