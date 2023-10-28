@@ -1,10 +1,43 @@
 [package]
-name = "sharded_blockchain"
+name = "iot_money"
 version = "0.1.0"
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = "2018"
 
 [dependencies]
-tokio = { version = "1", features = ["full"] }
-futures = "0.3"
+# Networking Layer
+libp2p = "0.32.0"
+rust-noise = "0.5.1"
+libp2p-swarm = "0.22.0"
+libp2p-relay = "0.7.0"
+rust-ipfs = "0.4.1"
+rust-veriform = "0.3.0"
+lru = "0.6.6"
+epidemic = "0.1.0" # Assuming there's a crate for epidemic broadcast
+rust-erasure = "3.0.0"
+
+# Execution Layer
+wasm-pack = "0.12.1"
+wasmer = "4.2.3"
+parity-scale-codec = "2.3.1" # Assuming you're using Parity Substrate's SCALE codec for TrieDB
+bls-signatures = "0.15.0"
+crossbeam = "0.8.2"
+
+# Consensus Layer
+rust-sss = "0.9.0"
+blst = "0.3.0"
+merkle-trees = "0.1.0" # Assuming there's a crate for Merkle trees
+
+# Scaling Techniques
+sierpinski = "0.1.0" # Assuming there's a crate for Sierpinski fractal topology
+networkx = "0.2.0"
+
+# Optimization
+# (No additional dependencies specified)
+
+# Client Types
+bellman = "0.14.0"
+
+
+# General dependencies
+rand = "0.80.8.vscode-file://vscode-app/Applications/Visual%20Studio%20Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.html5erde = "1.0"
+serde = "1.0.19"
