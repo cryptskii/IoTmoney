@@ -47,9 +47,7 @@ Thumbs.db
 docker-compose*.yml
 docker-compose*.yaml
 
-# Kubernetes configuration files
-*.kube.yml
-*.kube.yaml
+
 
 # Visual Studio Code directories
 .vscode/
