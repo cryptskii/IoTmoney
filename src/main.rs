@@ -1,31 +1,38 @@
-mod topology_manager;
-mod load_monitor;
-mod adaptive_networking;
 mod shard;
-
-use shard::{Shard, ShardState};
-use topology_manager::TopologyManager;
-use load_monitor::LoadMonitor;
-use adaptive_networking::AdaptiveNetworking;
+mod resource_management;
+mod sustainability;
+mod scaling_techniques;
+mod checksum;
+mod transaction;
+mod block;
+mod shard_reconfiguration;
+mod asynchronous_validation;
+mod receipts_and_block_signing;
+mod fraud_proof_sampling;
+mod cross_shard_communication;
+mod erasure_coding;
+mod network;
+mod checkpointing;
+mod security;
+mod load_monitoring;
+mod consensus;
+mod topology_management;
+mod state_management;
 
 fn main() {
-    let mut topology_manager = TopologyManager::new();
-    let mut load_monitor = LoadMonitor::new();
-    let mut adaptive_networking = AdaptiveNetworking::new();
-    let mut topology_manager = TopologyManager::new();
+    // Initialize modules and structures
+    let mut shard_manager = shard_reconfiguration::ShardManager::new();
+    let load_monitor = load_monitoring::LoadMonitor::new();
+    let resource_manager = resource_management::ResourceManager::new();
+    let consensus = consensus::Consensus::new();
+    let topology_manager = topology_management::TopologyManager::new();
+    let state_manager = state_management::StateManager::new();
+    let security_manager = security::Security::new();
+    
+    // Example: Create and add a shard
+    let shard = shard::Shard::new(1, 0);
+    shard_manager.add_shard(shard);
 
-    // Example: Creating a root shard and applying the Sierpinski pattern
-    let root_shard = Shard::new(1, ShardState { /* Initialize state */ });
-    topology_manager.add_shard(root_shard);
-    topology_manager.apply_sierpinski(1, 3);
     // Main application logic
- 
-
-
-
-   
-
-    // Further interactions with the topology_manager can be added here
+    // ...
 }
- // ...
-
