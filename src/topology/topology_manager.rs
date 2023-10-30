@@ -8,7 +8,7 @@ struct TopologyManager {
 impl TopologyManager {
     fn new() -> Self {
         Self {
-            shards: HashMap::new(),
+           shards: HashMap::new(),
         }
     }
 
