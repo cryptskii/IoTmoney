@@ -18,21 +18,47 @@ mod load_monitoring;
 mod consensus;
 mod topology_management;
 mod state_management;
+mod networking;
+mod execution;
+mod optimization;
+mod client_types;
+mod testing;
 
 fn main() {
     // Initialize modules and structures
     let mut shard_manager = shard_reconfiguration::ShardManager::new();
     let load_monitor = load_monitoring::LoadMonitor::new();
     let resource_manager = resource_management::ResourceManager::new();
-    let consensus = consensus::Consensus::new();
+    let consensus_manager = consensus::Consensus::new();
     let topology_manager = topology_management::TopologyManager::new();
     let state_manager = state_management::StateManager::new();
     let security_manager = security::Security::new();
-    
+    let networking_layer = networking::NetworkingLayer::new();
+    let execution_layer = execution::ExecutionLayer::new();
+    let scaling_techniques_manager = scaling_techniques::ScalingTechniques::new();
+    let optimization_layer = optimization::OptimizationLayer::new();
+    let client_types_manager = client_types::ClientTypes::new();
+    let testing_layer = testing::TestingLayer::new();
+
     // Example: Create and add a shard
     let shard = shard::Shard::new(1, 0);
     shard_manager.add_shard(shard);
 
-    // Main application logic
-    // ...
+    // Example: allocate resources and optimize usage
+    resource_manager.allocate_resources(&mut shard);
+    resource_manager.optimize_resource_usage();
+
+    // Use modules
+    networking_layer.propagate_transaction(&transaction);
+    execution_layer.execute_wasm(&wasm_module, &input);
+    consensus_manager.run_protocol(&shard);
+    scaling_techniques_manager.scale_shards(&mut shard_manager);
+
+    // Additional logic as per specifications
+    optimization_layer.optimize_transaction_validation(&shard);
+    let stateless_client = client_types_manager.create_stateless_client();
+    client_types_manager.validate_fraud_proofs(&stateless_client);
+    testing_layer.simulate_network(1000);
+
+    // Additional application logic
 }

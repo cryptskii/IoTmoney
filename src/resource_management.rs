@@ -12,4 +12,12 @@ impl ResourceManager {
         // Logic to optimize the overall resource usage of the system
         // This might involve redistributing resources, turning off idle nodes, etc.
     }
+
+    pub fn scale_up(&self, shard: &mut Shard) {
+        // Logic to scale up resources for the shard
+    }
+
+    pub fn scale_down(&self, shard: &mut Shard) {
+        // Logic to scale down resources for the shard
+    }
 }
