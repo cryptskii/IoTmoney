@@ -67,3 +67,66 @@ fn main() {
         println!("Shard {}: Level {}, Neighbors: {:?}", shard.id, shard.level, shard.neighbors);
     }
 }
+
+use std::collections::HashSet;
+use crate::checksum::Checksum;
+
+#[derive(Debug)]
+pub struct Shard {
+    pub id: u64,
+    pub level: u32,
+    pub neighbors: HashSet<u64>,
+    pub blocks: Vec<Block>,  // Assuming a Block struct is defined elsewhere
+}
+
+impl Shard {
+    pub fn new(id: u64, level: u32) -> Self {
+        Self {
+            id,
+            level,
+            neighbors: HashSet::new(),
+            blocks: Vec::new(),
+        }
+    }
+
+    pub fn add_neighbor(&mut self, neighbor_id: u64) {
+        self.neighbors.insert(neighbor_id);
+    }
+
+    // Recursively process blocks
+    pub fn process_blocks(&self) {
+        for block in &self.blocks {
+            // Process the block
+            // ...
+
+            // Recursively process blocks in child shards (if any)
+            for &neighbor_id in &self.neighbors {
+                let neighbor_shard = get_shard(neighbor_id);  // Assume a function to retrieve a shard by ID
+                neighbor_shard.process_blocks();
+            }
+        }
+    }
+
+    // Recursively calculate checksums for blocks
+    pub fn calculate_checksum(&self) -> Checksum {
+        let mut checksum = Checksum::new();
+        for block in &self.blocks {
+            checksum = Checksum::calculate(&block.data);  // Assuming Block has a data field
+        }
+
+        // Recursively calculate checksums in child shards (if any)
+        for &neighbor_id in &self.neighbors {
+            let neighbor_shard = get_shard(neighbor_id);  // Assume a function to retrieve a shard by ID
+            let neighbor_checksum = neighbor_shard.calculate_checksum();
+            checksum = checksum.combine(&neighbor_checksum);
+        }
+
+        checksum
+    }
+}
+
+fn get_shard(shard_id: u64) -> Shard {
+    // Placeholder implementation
+    Shard::new(shard_id, 0)
+}
+
