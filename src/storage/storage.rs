@@ -26,3 +26,20 @@ impl Storage {
         // This is a placeholder implementation
     }
 }
+pub struct StorageLayer;
+
+impl StorageLayer {
+    // Existing functions and logic
+
+    pub fn save_checkpoint(&self, shard_id: u64, checkpoint: &Checkpoint) {
+        // Logic to save a checkpoint for a specific shard
+    }
+
+    pub fn retrieve_checkpoint(&self, shard_id: u64) -> Option<Checkpoint> {
+        // Logic to retrieve a checkpoint for a specific shard
+    }
+
+    pub fn backup_all_shards_checkpoints(&self, checkpoints: &HashMap<u64, Checkpoint>) {
+        // Logic to backup all shards' checkpoints
+    }
+}

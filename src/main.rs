@@ -62,3 +62,18 @@ fn main() {
 
     // Additional application logic
 }
+
+fn main() {
+    // Initialization of modules
+    let storage_layer = storage::StorageLayer;
+    let synchronization_layer = synchronization::SynchronizationLayer;
+
+    // Use modules
+    let checkpoint = storage_layer.retrieve_checkpoint(shard_id).unwrap();
+    storage_layer.save_checkpoint(shard_id, &checkpoint);
+    let all_checkpoints = HashMap::new(); // Assume this is populated with all shards' checkpoints
+    storage_layer.backup_all_shards_checkpoints(&all_checkpoints);
+    synchronization_layer.synchronize_shard_checkpoints(&storage_layer);
+
+    // Additional logic and integration
+}
