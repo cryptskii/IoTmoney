@@ -1,127 +1,174 @@
-use blake3::Hasher;
+// Importing necessary modules and crates
+use std::sync::Arc;
 use dashmap::DashMap;
+use crossbeam::atomic::AtomicCell;
+use blake3::{Hash, Hasher};
+use wasmer::{Store, Module, Instance, imports};
 use serde::{Serialize, Deserialize};
-use serde_cbor::{to_vec, from_slice};
-use std::collections::HashMap;
-use std::sync::{Arc, RwLock};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+// Node struct represents a single node in the Trie
+#[derive(Debug)]
 struct Node {
-    key: Option<Vec<u8>>,
-    value: RwLock<Option<Vec<u8>>>,
-    children: HashMap<u8, Arc<RwLock<Node>>>,
-    epoch: u64,
+    // Hash of the current node, stored atomically for lock-free access
+    hash: AtomicCell<Hash>,
+    // Optional value associated with the node, stored atomically
+    value: AtomicCell<Option<Vec<u8>>>,
+    // Concurrent hashmap of children nodes
+    children: DashMap<Box<[u8]>, Arc<Node>>,
 }
 
 impl Node {
-    fn new(key: Option<Vec<u8>>, epoch: u64) -> Self {
+    // Constructor to create a new Node with a given hash
+    fn new(hash: Hash) -> Self {
         Self {
-            key,
-            value: RwLock::new(None),
-            children: HashMap::new(),
-            epoch,
+            hash: AtomicCell::new(hash),
+            value: AtomicCell::new(None),
+            children: DashMap::new(),
         }
     }
 
-    fn insert(&self, key: Vec<u8>, value: Vec<u8>, epoch: u64) {
+    // Inserts a key-value pair into the Trie, updating the hash of the node
+    fn insert(&self, key: &[u8], value: Vec<u8>) -> Hash {
         if key.is_empty() {
-            let mut self_mut = self.value.write().unwrap();
-            *self_mut = Some(value);
+            // If the key is empty, store the value in the current node
+            self.value.store(Some(value));
+            // Recalculate and return the hash of the node
+            self.rehash()
         } else {
-            let idx = key[0];
-            let child_key = key[1..].to_vec();
-            let child_node = self.children.entry(idx).or_insert_with(|| {
-                Arc::new(RwLock::new(Node::new(Some(child_key.clone()), epoch)))
-            }).clone();
-            child_node.write().unwrap().insert(child_key, value, epoch);
+            // If the key is not empty, find or create the child node for the next byte in the key
+            let child_key = key[0..1].to_owned().into_boxed_slice();
+            let child = self.children
+                .entry(child_key)
+                .or_insert_with(|| Arc::new(Node::new(Hash::new())))
+                .clone();
+            // Recursively insert the rest of the key in the child node
+            let new_hash = child.insert(&key[1..], value);
+            // Recalculate and return the hash of the current node
+            self.rehash();
+            new_hash
         }
     }
 
+    // Retrieves a value associated with a key in the Trie
     fn get(&self, key: &[u8]) -> Option<Vec<u8>> {
         if key.is_empty() {
-            self.value.read().unwrap().clone()
+            // If the key is empty, return the value of the current node
+            self.value.load()
         } else {
-            let idx = key[0];
-            if let Some(child_node) = self.children.get(&idx) {
-                child_node.read().unwrap().get(&key[1..])
-            } else {
-                None
-            }
+            // If the key is not empty, find the child node for the next byte in the key and recursively retrieve the value
+            self.children.get(&key[0..1]).and_then(|child| child.get(&key[1..]))
         }
     }
 
-    fn hash(&self) -> blake3::Hash {
+    // Recalculates the hash of the current node based on its value and the hashes of its children
+    fn rehash(&self) -> Hash {
         let mut hasher = Hasher::new();
-        if let Some(key) = &self.key {
-            hasher.update(key);
-        }
-        if let Some(value) = &*self.value.read().unwrap() {
-            hasher.update(value);
+        if let Some(value) = self.value.load() {
+            hasher.update(&value);
         }
         for child in self.children.iter() {
-            hasher.update(&[*child.key()]);
-            hasher.update(child.value().read().unwrap().hash().as_bytes());
+            hasher.update(child.value().hash.load().as_bytes());
         }
-        hasher.finalize()
-    }
-
-    fn serialize(&self) -> Result<Vec<u8>, serde_cbor::Error> {
-        to_vec(self)
-    }
-
-    fn deserialize(data: &[u8]) -> Result<Self, serde_cbor::Error> {
-        from_slice(data)
+        let hash = hasher.finalize();
+        self.hash.store(hash);
+        hash
     }
 }
 
-#[derive(Debug, Clone)]
-struct ConcurrentMerklePatriciaTrie {
-    root: Arc<RwLock<Node>>,
+// Trie struct represents the entire Trie data structure
+#[derive(Debug)]
+struct Trie {
+    // Root node of the Trie
+    root: Arc<Node>,
 }
 
-impl ConcurrentMerklePatriciaTrie {
-    fn new(epoch: u64) -> Self {
-        Self {
-            root: Arc::new(RwLock::new(Node::new(None, epoch))),
-        }
+impl Trie {
+    // Constructor to create a new Trie with a default root node
+    fn new() -> Self {
+        Self { root: Arc::new(Node::new(Hash::new())) }
     }
 
-    fn insert(&self, key: Vec<u8>, value: Vec<u8>, epoch: u64) {
-        self.root.write().unwrap().insert(key, value, epoch);
+    // Inserts a key-value pair into the Trie
+    fn insert(&self, key: Vec<u8>, value: Vec<u8>) -> Hash {
+        self.root.insert(&key, value)
     }
 
+    // Retrieves a value associated with a key in the Trie
     fn get(&self, key: &[u8]) -> Option<Vec<u8>> {
-        self.root.read().unwrap().get(key)
+        self.root.get(key)
     }
 
-    fn root_hash(&self) -> blake3::Hash {
-        self.root.read().unwrap().hash()
+    // Returns the hash of the root node of the Trie
+    fn root_hash(&self) -> Hash {
+        self.root.hash.load()
     }
 }
 
-fn main() {
-    let epoch = 1;
-    let trie = Arc::new(ConcurrentMerklePatriciaTrie::new(epoch));
+// Transaction struct represents a transaction in the system
+#[derive(Debug, Serialize, Deserialize)]
+struct Transaction {
+    // Define your fields here
+}
 
-    let handles: Vec<_> = (0..10).map(|i| {
-        let trie_clone = Arc::clone(&trie);
-        std::thread::spawn(move || {
-            let key = format!("key{}", i).into_bytes();
-            let value = format!("value{}", i).into_bytes();
-            trie_clone.insert(key, value, epoch);
-        })
-    }).collect();
+impl Transaction {
+    // Returns the account ID associated with the transaction
+    fn account_id(&self) -> usize {
+        // Implement this method based on your transaction structure
+        0
+    }
+}
 
-    for handle in handles {
-        handle.join().unwrap();
+// Shard struct represents a shard in the distributed system
+struct Shard {
+    // Trie data structure associated with the shard
+    trie: Trie,
+    // WebAssembly module associated with the shard
+    wasm_module: Module,
+}
+
+impl Shard {
+    // Constructor to create a new Shard with a given WebAssembly binary
+    fn new(wasm: &[u8], store: &Store) -> Result<Self, Box<dyn std::error::Error>> {
+        let trie = Trie::new();
+        let wasm_module = Module::new(store, wasm)?;
+        Ok(Self { trie, wasm_module })
     }
 
-    let key = b"key5".to_vec();
-    if let Some(value) = trie.get(&key) {
-        println!("Retrieved: {:?}", String::from_utf8(value).unwrap());
-    } else {
-        println!("Key not found");
+    // Applies a transaction to the shard, updating the Trie and executing the WebAssembly module
+    fn apply(&self, txn: Transaction) -> Result<Hash, Box<dyn std::error::Error>> {
+        // Serialize the transaction and calculate its hash
+        let encoded = bincode::serialize(&txn)?;
+        let hash = blake3::hash(&encoded);
+
+        // Create a new instance of the WebAssembly module and call the "apply_transaction" function
+        let wasm_instance = Instance::new(&self.wasm_module, &imports!{})?;
+        let apply_transaction = wasm_instance.exports.get_function("apply_transaction")?;
+        apply_transaction.call(&[hash.to_le_bytes().into()])?;
+
+        // Insert the transaction hash and serialized transaction into the Trie
+        Ok(self.trie.insert(hash.to_le_bytes().to_vec(), encoded))
+    }
+}
+
+// ShardManager struct represents the manager of all shards in the system
+struct ShardManager {
+    // Vector of shards
+    shards: Vec<Shard>,
+}
+
+impl ShardManager {
+    // Constructor to create a new ShardManager with a given number of shards and a WebAssembly binary
+    fn new(shards: usize, wasm: &[u8], store: &Store) -> Result<Self, Box<dyn std::error::Error>> {
+        let mut shard_vec = Vec::with_capacity(shards);
+        for _ in 0..shards {
+            shard_vec.push(Shard::new(wasm, store)?);
+        }
+        Ok(Self { shards: shard_vec })
     }
 
-    println!("Root Hash: {:?}", trie.root_hash());
+    // Applies a transaction to the appropriate shard based on the account ID
+    fn apply(&mut self, txn: Transaction) -> Result<Hash, Box<dyn std::error::Error>> {
+        let shard_id = txn.account_id() % self.shards.len();
+        self.shards.get_mut(shard_id).ok_or("Shard not found".into()).and_then(|shard| shard.apply(txn))
+    }
 }
