@@ -482,3 +482,6 @@ The simulator is built using a custom discrete event framework in Rust for effic
 
 The parameters are set to accurately model real-world conditions, threats, and cryptography based on data sourced from existing decentralized networks and academic measurement studies. The simulations execute using a custom discrete event framework implemented in Rust for efficiency and parallelization across shards. Statistical analysis provides confidence intervals on results.
 
+# PLEASE FEEL FREE TO CONNECT WITH US:
+- Telegram = @IoTmoney
+- Twitter = @IoTmoney
