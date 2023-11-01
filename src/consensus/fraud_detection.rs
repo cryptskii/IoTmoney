@@ -1,5 +1,5 @@
-use rand::Rng;
 use serde::{Deserialize, Serialize};
+use rand::{thread_rng, Rng};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Proof {
@@ -91,3 +91,16 @@ pub fn sample_fraud_proofs(shard: &Shard) -> Option<FraudProof> {
 
     None
 }
+
+
+pub struct FraudDetector {
+  sample_rate: f32,
+}
+
+// Implementation
+
+pub fn check_fraud(detector: &FraudDetector, proofs: &[Proof]) -> bool {
+  detector.sample_and_check(proofs)  
+}
+
+struct Proof; // Proof data structure

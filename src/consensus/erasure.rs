@@ -1,6 +1,7 @@
 use blake3::hash;
 use std::collections::HashSet;
 use std::convert::TryInto;
+use reed_solomon_erasure::{ReedSolomon, reconstruct_data};
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
 struct Transaction {
@@ -111,3 +112,14 @@ fn main() {
     println!("Verification successful!");
 }
 
+pub fn encode(data: &[u8]) -> Vec<Vec<u8>> {
+  let num_data_shards = 10;
+  let num_parity_shards = 4;
+
+  let reed_solomon = ReedSolomon::new(num_data_shards, num_parity_shards).unwrap();
+  reed_solomon.encode(data)
+}
+
+pub fn reconstruct(encoded_data: &[Vec<u8>]) -> Result<Vec<u8>, &'static str> {
+  reconstruct_data(encoded_data).map_err(|_| "Error reconstructing data")
+}
