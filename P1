@@ -1,0 +1,32 @@
+Require Import ZArith.
+Require Import Coq.FSets.FMapAVL.
+Require Import Coq.Structures.OrderedTypeEx.
+
+Definition Address : Type := nat.
+Definition Signature : Type := nat.
+Definition ShardID : Type := nat.
+Definition Nonce : Type := nat.
+Definition Timestamp : Type := Z.
+
+Module AddressMap := FMapAVL.Make(Nat_as_OT).
+Definition State : Type := AddressMap.t nat.
+
+Definition TransactionInput : Type := (Signature * Address * Nonce).
+Definition TransactionOutput : Type := (Address * nat).
+Definition Transaction : Type := list TransactionInput * list TransactionOutput.
+
+Record BlockContents := {
+  transactions : list Transaction
+}.
+
+Record BlockHeader := {
+  height : nat;
+  timestamp : Timestamp;
+  state_root_hash : nat;
+  nonce: Nonce
+}.
+
+Definition Block := BlockHeader * BlockContents * Signature.
+
+(* Maps addresses to account balances *)
+
