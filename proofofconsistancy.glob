@@ -1,0 +1,136 @@
+DIGEST e5e29dd29d971a255d78dde226006cb6
+Fproofofconsistancy
+R15:29 Coq.Arith.Arith <> <> lib
+R47:60 Coq.Lists.List <> <> lib
+R78:90 Coq.Bool.Bool <> <> lib
+R100:112 Coq.Lists.List ListNotations <> mod
+def 212:218 <> Address
+R230:232 Coq.Init.Datatypes <> nat ind
+def 246:252 <> Balance
+R264:266 Coq.Init.Datatypes <> nat ind
+def 280:283 <> Hash
+R295:297 Coq.Init.Datatypes <> nat ind
+ind 311:317 <> ShardID
+constr 331:339 <> mkShardID
+R347:349 Coq.Init.Datatypes <> nat ind
+binder 342:343 <> id:3
+def 365:369 <> Shard
+R381:387 proofofconsistancy <> ShardID ind
+rec 398:408 <> Transaction
+proj 438:443 <> sender
+proj 458:466 <> recipient
+proj 481:486 <> amount
+proj 501:505 <> shard
+R447:453 proofofconsistancy <> Address def
+R470:476 proofofconsistancy <> Address def
+R490:496 proofofconsistancy <> Balance def
+R509:513 proofofconsistancy <> Shard def
+rec 526:530 <> Block
+proj 554:559 <> height
+proj 570:573 <> txns
+proj 597:606 <> state_root
+R563:565 Coq.Init.Datatypes <> nat ind
+R577:580 Coq.Init.Datatypes <> list ind
+R582:592 proofofconsistancy <> Transaction rec
+R610:613 proofofconsistancy <> Hash def
+ind 629:636 <> Topology
+constr 650:653 <> Leaf
+constr 673:676 <> Node
+R664:668 proofofconsistancy <> Shard def
+binder 656:660 <> shard:15
+R686:693 proofofconsistancy <> Topology:13 ind
+binder 679:682 <> left:16
+R705:712 proofofconsistancy <> Topology:13 ind
+binder 697:701 <> right:17
+rec 777:781 <> State
+proj 805:812 <> balances
+proj 838:843 <> shards
+proj 870:877 <> topology
+R823:826 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R816:822 proofofconsistancy <> Address def
+R827:833 proofofconsistancy <> Balance def
+R852:855 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R847:851 proofofconsistancy <> Shard def
+R856:859 Coq.Init.Datatypes <> list ind
+R861:865 proofofconsistancy <> Block rec
+R881:888 proofofconsistancy <> Topology ind
+def 952:957 <> update
+R964:968 proofofconsistancy <> Shard def
+binder 960:960 <> s:22
+R985:988 Coq.Init.Datatypes <> list ind
+R990:994 proofofconsistancy <> Block rec
+binder 972:981 <> new_blocks:23
+R1012:1015 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1007:1011 proofofconsistancy <> Shard def
+R1016:1019 Coq.Init.Datatypes <> list ind
+R1021:1025 proofofconsistancy <> Block rec
+binder 998:1003 <> shards:24
+R1035:1038 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1030:1034 proofofconsistancy <> Shard def
+R1039:1042 Coq.Init.Datatypes <> list ind
+R1044:1048 proofofconsistancy <> Block rec
+R1062:1066 proofofconsistancy <> Shard def
+binder 1058:1058 <> x:25
+R1081:1081 proofofconsistancy <> s:22 var
+R1078:1078 proofofconsistancy <> x:25 var
+R1090:1098 proofofconsistancy <> mkShardID constr
+R1105:1113 proofofconsistancy <> mkShardID constr
+R1127:1136 Coq.Arith.PeanoNat Nat eq_dec thm
+R1167:1172 proofofconsistancy <> shards:24 var
+R1174:1174 proofofconsistancy <> x:25 var
+R1151:1160 proofofconsistancy <> new_blocks:23 var
+def 1234:1244 <> updateShard
+R1252:1256 proofofconsistancy <> State rec
+binder 1247:1248 <> st:28
+R1264:1268 proofofconsistancy <> Block rec
+binder 1260:1260 <> b:29
+R1276:1280 proofofconsistancy <> Shard def
+binder 1272:1272 <> s:30
+R1285:1289 proofofconsistancy <> State rec
+R1296:1302 proofofconsistancy <> mkState constr
+R1305:1312 proofofconsistancy <> balances proj
+R1314:1315 proofofconsistancy <> st:28 var
+R1329:1334 proofofconsistancy <> update def
+R1336:1336 proofofconsistancy <> s:30 var
+R1340:1344 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R1356:1356 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R1339:1339 proofofconsistancy <> b:29 var
+R1345:1350 proofofconsistancy <> shards proj
+R1352:1353 proofofconsistancy <> st:28 var
+R1355:1355 proofofconsistancy <> s:30 var
+R1360:1365 proofofconsistancy <> shards proj
+R1367:1368 proofofconsistancy <> st:28 var
+R1383:1390 proofofconsistancy <> topology proj
+R1392:1393 proofofconsistancy <> st:28 var
+prf 1442:1458 <> shard_consistency
+R1474:1478 proofofconsistancy <> State rec
+binder 1469:1470 <> st:31
+R1486:1490 proofofconsistancy <> Block rec
+binder 1482:1482 <> b:32
+R1502:1506 proofofconsistancy <> Shard def
+binder 1494:1495 <> s1:33
+binder 1497:1498 <> s2:34
+R1520:1526 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R1514:1517 Coq.Init.Logic <> ::type_scope:x_'<>'_x not
+R1512:1513 proofofconsistancy <> s1:33 var
+R1518:1519 proofofconsistancy <> s2:34 var
+R1527:1527 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R1559:1563 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R1576:1576 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R1528:1533 proofofconsistancy <> shards proj
+R1536:1546 proofofconsistancy <> updateShard def
+R1548:1549 proofofconsistancy <> st:31 var
+R1551:1551 proofofconsistancy <> b:32 var
+R1553:1554 proofofconsistancy <> s1:33 var
+R1557:1558 proofofconsistancy <> s2:34 var
+R1564:1569 proofofconsistancy <> shards proj
+R1571:1572 proofofconsistancy <> st:31 var
+R1574:1575 proofofconsistancy <> s2:34 var
+R1627:1637 proofofconsistancy <> updateShard def
+R1640:1645 proofofconsistancy <> update def
+R1669:1678 Coq.Arith.PeanoNat Nat eq_dec thm
+R1669:1678 Coq.Arith.PeanoNat Nat eq_dec thm
+R1734:1740 Coq.Init.Logic <> f_equal thm
+R1742:1750 proofofconsistancy <> mkShardID constr
+R1734:1740 Coq.Init.Logic <> f_equal thm
+R1742:1750 proofofconsistancy <> mkShardID constr

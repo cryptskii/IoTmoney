@@ -56,3 +56,19 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     Ok(())
 }
+
+pub fn execute(wasm_module: &[u8], inputs: &[u8]) -> Vec<u8> {
+  let store = Store::new(&Cranelift::default());
+
+  let module = Module::new(&store, wasm_module).unwrap();
+  let instance = Instance::new(&module, &[]).unwrap();
+
+  let execute_fn = instance.exports.get_function("execute").unwrap();
+  let outputs = execute_fn.call(&[inputs.into()]).unwrap();
+
+  // Convert `wasmer::Val` outputs to bytes
+  let mut outputs_bytes = Vec::new();
+  // ...
+
+  outputs_bytes
+}

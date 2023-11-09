@@ -1,18 +1,25 @@
-struct LoadMonitor {
-    transaction_rate: f64,
-    cpu_load: f64,
-    network_bandwidth: f64,
-    // Other necessary fields
-}
+use crate::shard::Shard;
+use crate::resource_management::ResourceManager;
+
+pub struct LoadMonitor;
 
 impl LoadMonitor {
     pub fn new() -> Self {
-        // Initialization logic
+        Self { /* Initialization parameters */ }
     }
 
-    pub fn update_metrics(&mut self) {
-        // Logic to update the metrics
+    pub fn monitor_load(&self, shard: &Shard) -> f64 {
+        // Logic to monitor the load on the shard
+        // This might involve measuring transaction throughput, resource utilization, etc.
     }
 
-    // Other necessary methods
+    pub fn make_scaling_decisions(&self, shard: &mut Shard, resource_manager: &ResourceManager) {
+        let load = self.monitor_load(shard);
+        
+        if load > UPPER_LOAD_THRESHOLD {
+            resource_manager.scale_up(shard);
+        } else if load < LOWER_LOAD_THRESHOLD {
+            resource_manager.scale_down(shard);
+        }
+    }
 }

@@ -1,5 +1,5 @@
-use rand::Rng;
 use serde::{Deserialize, Serialize};
+use rand::{thread_rng, Rng};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Proof {
@@ -56,3 +56,51 @@ fn main() {
         Err(err) => println!("{}", err),
     }
 }
+
+
+use crate::shard::Shard;
+use rand::prelude::*;
+
+pub struct FraudProof;
+
+pub fn propagate_fraud_proof(shard: &Shard, fraud_proof: &FraudProof) {
+    // Propagate the fraud proof to the current shard
+    // ...
+
+    // Recursively propagate the fraud proof to child shards (if any)
+    for &neighbor_id in &shard.neighbors {
+        let neighbor_shard = get_shard(neighbor_id);  // Assume a function to retrieve a shard by ID
+        propagate_fraud_proof(&neighbor_shard, fraud_proof);
+    }
+}
+
+pub fn sample_fraud_proofs(shard: &Shard) -> Option<FraudProof> {
+    let mut rng = thread_rng();
+    if rng.gen::<f64>() < SAMPLE_RATE {  // SAMPLE_RATE is a constant defining the sampling probability
+        // Sample a fraud proof from the current shard
+        // ...
+
+        // Recursively sample fraud proofs from child shards (if any)
+        for &neighbor_id in &shard.neighbors {
+            let neighbor_shard = get_shard(neighbor_id);  // Assume a function to retrieve a shard by ID
+            if let Some(fraud_proof) = sample_fraud_proofs(&neighbor_shard) {
+                return Some(fraud_proof);
+            }
+        }
+    }
+
+    None
+}
+
+
+pub struct FraudDetector {
+  sample_rate: f32,
+}
+
+// Implementation
+
+pub fn check_fraud(detector: &FraudDetector, proofs: &[Proof]) -> bool {
+  detector.sample_and_check(proofs)  
+}
+
+struct Proof; // Proof data structure
